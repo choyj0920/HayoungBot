@@ -120,7 +120,7 @@ rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
 
 
 
-## Discord bot Init
+## Discord bot init
 
 discord bot 실행시 처음 부분
 
@@ -170,12 +170,32 @@ client.on('interactionCreate', async interaction => {
 			const command = client.commands.get(interaction.commandName);
 			await command.execute(interaction,interaction.options.get("옵션").value.split(" "));
 		}
+    }catch (error) {// 에러 
+		console.error(error); 
+		await interaction.editReply({ content: 'error', ephemeral: true });
+	}
 });
-
-
+    
 client.login(token); // bot 실행
 
 
+```
+
+
+
+## Discord command
+
+### js file inside "./command" 
+
+```javascript
+const Discord = require('discord.js')
+module.exports = {
+    name: '노래',
+    description: '유튜브에서 노래를 찾고 재생하는 기능을 실행시키는 명령어',
+    async execute(message, args) {
+        // define
+    }
+}
 ```
 
 
@@ -209,9 +229,9 @@ client.login(token); // bot 실행
 
 
 
-## 🔤Discord bot Message Embed 
+## 🔤Discord bot Embed Message 
 
-text메시지말고 박스 형태로 사진, 동영상 url등으로 멀티미디어 메시지 느낌? 색 글씨 크기 등등 지정가능
+박스 형태로 사진, 동영상 url등으로 멀티미디어 메시지 느낌? 색 글씨 크기 등등 지정가능
 
 As of Discord v13,  the message has been changed to contain multiple embeds.
 
@@ -229,88 +249,63 @@ channel.send({ embeds : [myembed1,myembed2]})
 
 
 
+## Music command
 
-
-### Index.js
+### library 
 
 ```javascript
-const { Client, Intents, DiscordAPIError} = require('discord.js');
-const {Collection}=require('discord.js')
-const { token } = require('./config.json');
+// A library that creates stream objects from YouTube URLs.
+const ytdl = require('ytdl-core') 
+
+// Extract search url and title from YouTube with specific keywords
+const yts = require('yt-search') 
+
+const {
+   AudioPlayerStatus, 
+   StreamType,
+   createAudioPlayer,
+    VoiceConnectionStatus ,
+   createAudioResource,
+   joinVoiceChannel,
+    getVoiceConnection
+} = require('@discordjs/voice'); // discord voice
+
 const Discord = require('discord.js')
 
-const fs=require('fs')
-myIntents =new Intents()
-myIntents.add(Intents.FLAGS.GUILD_PRESENCES, Intents.FLAGS.GUILD_MEMBERS,Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES);
-myIntents.GUILD_VOICE_STATES
-const client = new Client({ intents:myIntents });
-client.commands=new Collection()
-const commandFiles=fs.readdirSync('./commands').filter(file=>file.endsWith('.js'))
+```
 
-for(const file of commandFiles){
-	console.log(file)
-	const command=require(`./commands/${file}`)
-	client.commands.set(command.name,command)
+### Variable
+
+```javascript
+// 봇에서 계속 사용할 변수 
+const Playlist = new Discord.Collection()
+//Playlist[guildid] => Collection for each guild
+//Playlist[guildid]["musicplaylist"] => musicplaylist for guild
+//Playlist[guildid]["isloop"] => islook for guild
+
+module.exports = { // command 정의
+    name: '노래',
+    description: '유튜브에서 노래를 찾고 재생하는 기능을 실행시키는 명령어',
+    async execute(message, args) { // interaction 수행
+        var PlaylistArray = new Array()
+        const MGI = message.guild.id
+        // 길드 컬렉션 가져오기
+        if (!Playlist.has(MGI)) Playlist.set(MGI, new Discord.Collection())
+        else PlaylistArray =  Playlist.get(MGI).get("musicplaylist")
+        console.log("MGI-길드 컬렉션 생성")
+        
+        //길드 컬렉션에서 음악리스트 추출
+        const MPL = await Playlist.get(MGI).get("musicplaylist")
+        if (MPL == null)  Playlist.get(MGI).set("musicplaylist", PlaylistArray)
+        
+        //길드 컬렉션에서 반복여부 가져오기
+        isLoop = Playlist.get(MGI).get("isloop")
+        if(isLoop==null) {
+            Playlist.get(MGI).set("isloop",false)
+            isLoop=false
+        }
+    }
 }
-
-client.once('ready', () => {
-	console.log('Ready!');
-});
-
-client.on('interactionCreate', async interaction => {
-	if (!interaction.isCommand()) return;
-
-	const { commandName } = interaction;
-	await interaction.reply(`수행 중`);
-
-
-	try {
-
-		if (commandName === 'ping') {
-			await interaction.editReply('Pong!');
-		} else if (commandName === 'server') {
-			await interaction.editReply(`Server name: ${interaction.guild.name}\nTotal members: ${interaction.guild.memberCount}`);
-		} else if (commandName === 'user') {
-			await interaction.editReply(`Your tag: ${interaction.user.tag}\nYour id: ${interaction.user.id}`);
-		}else if (commandName ==='도움말'){
-
-			const myembed = new Discord.MessageEmbed().setTitle("😋 도움말 😝").setDescription("나의 단축키를 알려주겠따!😝").setColor("#33ff73")
-			myembed.addField('/노래 재생 제목 : ',' 해당 제목의 노래를 플레이리스트에 담고 재생중이 아니라면 재생합니다.')
-			myembed.addField('/노래 루프 : ',' 다음곡 재생부터 루프형식으로 바꿉니다.')
-			myembed.addField('/노래 플레이리스트 : ',' 현재 노래의 플레이리스트를 출력합니다.')
-			myembed.addField('/노래 플레이리스트 삭제 n : ',' n번 노래를 플레이리스트에서 삭제합니다.')
-			myembed.addField('/노래 건너뛰기 : ',' 다음곡으로 ㄱㄱ')
-			myembed.addField('/노래 종료 : ',' 노래 정지')
-
-
-			await interaction.editReply("빠 밤!");
-			interaction.editReply({ embeds : [myembed]})
-
-		}
-
-		if(commandName ==='노래'){
-			await interaction.editReply(`${interaction.options.get("옵션").value}`);
-
-			const command = client.commands.get(interaction.commandName);
-			console.log(interaction.options.get("옵션").value.split(" "))
-			await command.execute(interaction,interaction.options.get("옵션").value.split(" "));
-			
-	
-		}
-	} catch (error) {
-		console.error(error);
-		await interaction.editReply({ content: 'There was an error while executing this command!', ephemeral: true });
-	}
-
-});
-
-
-
-
-
-client.login(token);
-
-
 ```
 
 
