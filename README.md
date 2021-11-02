@@ -218,7 +218,9 @@ module.exports = {
 - #### message reply : 응답 메시지 - 수신된 메시지가 있어야 사용가능하며 한 번만 보낼 수있어 대답을 하고 수정하거나 send message르 사용하는 식, 또한 메시지 수신 15분 후 토큰이 만료되어 대답을 하거나 수정할 수 없음
 
   - ```javascript
-    // There must be a received message first, and it can only be sent once (modification is possible), //you cannot respond or modify the response 15 minutes after receiving the message.
+    // There must be a received message first, and it can only be sent once
+    //(modification is possible)
+    //you cannot respond or modify the response 15 minutes after receiving the message.
     // in interaction
     
     interaction.reply("waiting answer")
@@ -236,7 +238,9 @@ module.exports = {
 As of Discord v13,  the message has been changed to contain multiple embeds.
 
 ```javascript
-const myembed1=new Discord.MessageEmbed().setTitle("embed1").setTitle("😋 도움말 😝").setDescription("나의 단축키를 알려주겠따!😝").setColor("#33ff73")
+const myembed1=new Discord.MessageEmbed().
+setTitle("embed1").setTitle("😋 도움말 😝").
+setDescription("나의 단축키를 알려주겠따!😝").setColor("#33ff73")
 const myembed2=new Discord.MessageEmbed().setTitle("embed2")
 const myembed3=new Discord.MessageEmbed().setTitle("embed3")
                                                    
