@@ -312,5 +312,16 @@ module.exports = { // command 정의
 }
 ```
 
+### Check the voice channel to which the sender belongs
 
+```javascript
+// 메시지를 보낸 유저가 속해있는 음성채널 가져오기
+const voiceChannel = <interaction>message.member.voice.channel
+// 메시지를 보낸 유저가 음성 채널에 들어가 있는지 확인
+if (!voicechannel) return message.editreply("음성채널에 들어가 주세요")
+
+// 현재 client(bot)이 해당 음성채널에 들어가 있는지 확인 
+const status=getVoiceConnection(voiceChannel.id)
+console.log(status?"현재 접속중":"접속중 아님") //status==null 일경우 연결x
+```
 
