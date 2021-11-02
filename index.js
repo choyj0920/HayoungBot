@@ -4,14 +4,15 @@ const { token } = require('./config.json');
 const Discord = require('discord.js')
 
 const fs=require('fs')
-myIntents =new Intents()
+var myIntents =new Intents()
 myIntents.add(Intents.FLAGS.GUILD_PRESENCES, Intents.FLAGS.GUILD_MEMBERS,Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES);
-myIntents.GUILD_VOICE_STATES
 const client = new Client({ intents:myIntents });
+
+
 client.commands=new Collection()
 const commandFiles=fs.readdirSync('./commands').filter(file=>file.endsWith('.js'))
 
-for(const file of commandFiles){
+for(const file of commandFiles){ // 
 	console.log(file)
 	const command=require(`./commands/${file}`)
 	client.commands.set(command.name,command)
