@@ -253,7 +253,7 @@ channel.send({ embeds : [myembed1,myembed2]})
 
 
 
-## Music command
+## #️⃣ Music command
 
 ### library 
 
@@ -320,8 +320,50 @@ const voiceChannel = <interaction>message.member.voice.channel
 // 메시지를 보낸 유저가 음성 채널에 들어가 있는지 확인
 if (!voicechannel) return message.editreply("음성채널에 들어가 주세요")
 
-// 현재 client(bot)이 해당 음성채널에 들어가 있는지 확인 
-const status=getVoiceConnection(voiceChannel.id)
-console.log(status?"현재 접속중":"접속중 아님") //status==null 일경우 연결x
+
+```
+
+### ➿ music search 
+
+```javascript
+const yts = require('yt-search')
+
+async function search_youtube_music(music_name){
+    const r =await yts(music_name)
+    const videos= r.videos.slice(0,1)
+    return videos[0] //가장 위에 객체 리턴
+}
+```
+
+### ▶ Play music in Voice Channel
+
+```javascript
+const ytdl = require('ytdl-core')
+
+async function music_play(message, voiceChannel){
+    // voice channel 접속부
+    const voice= joinVoiceChannel({
+        channelId:voiceChannel.id,
+        guildId:voiceChannel.guild.id,
+        adapterCreator:voiceChannel.guild.voiceAdapterCreator
+    })
+    // get music url
+    const musicurl=search_youtube_music("title").url
+    // convert stream
+    const stream= ytdl(music.url,{filter : 'audioonly'})
+    const resource = createAudioResource(stream,
+              { inputType :StreamType.Arbitrary});
+    const player=createAudioPlayer()
+
+    player.play(resource)
+    voice.subscribe(player);
+
+    player.on(AudioPlayerStatus.Idle, () => 
+  /* stream 종료 시 실행 (ex . disconect voice channel , replay music, ...) */
+             );
+    player.on("error", console.error);
+    
+    
+}
 ```
 

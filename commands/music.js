@@ -43,8 +43,11 @@ module.exports = {
         // The voice channel to which the sender of the message belongs
         const voiceChannel = message.member.voice.channel
         // 봇이 voicechannel과 연결되어있는지 여부
-        const status= getVoiceConnection(voiceChannel?.id)
+        var status =false
+        console.log("봇채널",message.client.voice.chanel)
         
+        
+        console.log(`isplay ${isPlay} status ${status}`)
         
         console.log(`MPL(${message.member.guild.name}) : ${Playlist.get(MGI).get("musicplaylist")}`)
         
@@ -54,9 +57,7 @@ module.exports = {
             
             if(!voiceChannel) return message.editReply("⛔오류 : 이명령어를 사용하기 위해서는 음성 채널에 들어가 있으셔야해요⛔")
 
-            if(status && isPlay){
-                return message.editReply("⛔오류 : 노래가 다른 채널에서 재생 중이거나 플레이리스트에 재생 곡이 남아있습니다.⛔")
-            }
+            // if(!status && isPlay) return message.editReply("⛔오류 : 노래가 다른 채널에서 재생 중이거나 플레이리스트에 재생 곡이 남아있습니다.⛔")
 
             if(!args[1]){ //노래 재생 - 멈췄었던 노래 재생 명령어
                 if(MPL[0] !=null){ //재생될 곡 존재
@@ -91,15 +92,24 @@ module.exports = {
                 // 음악 틀기
                 music_play(message,voiceChannel)
             }
-        }else if(args[0] =='루프'){
+        }else if(args[0] =='루프'){ // 루프 설정
             isLoop =!isLoop
             Playlist.get(MGI).set("isloop",isLoop)
             message.editReply({ embeds : [new Discord.MessageEmbed().setTitle("😁 /노래 루프!! 😁").
             setDescription(!isLoop?"➡반복 끌게여 ㅠㅠ ":"🔁반복할게여~").
             setColor("#33ff73")]})
         }else if(args[0] =='종료'){
-            if(status == null) return message.editReply("⛔오류 : 노래가 종료 되어있습니다.⛔")
+            if(!isPlay) return message.editReply("⛔오류 : 노래가 종료 되어있습니다.⛔")
             
+            PlaylistArray = []
+            Playlist.get(MGI).set("musicplaylist", PlaylistArray)
+            Playlist.get(MGI).set("isloop", false)
+            Playlist.get(MGI).set("curmusic", null)
+            
+            const connection = getVoiceConnection(voiceChannel.id);
+            music_play(message,voiceChannel)
+            await message.editReply("노래가 종료 되었습니다.👍")
+
         }
         
 
@@ -115,10 +125,11 @@ async function music_play(message, voiceChannel){
         guildId:voiceChannel.guild.id,
         adapterCreator:voiceChannel.guild.voiceAdapterCreator
     })
+    //변수 가져오기
+    const MGI=message.guild.id
     isLoop= Playlist.get(MGI).get("isloop")
 
-    const MGI=message.guild.id
-    if(!Playlist.get(MGI).get("musicplaylist")[0] && !isLoop){
+    if(!Playlist.get(MGI).get("musicplaylist")[0] && !isLoop){ // 재생할 노래가 없으면 종료
         message.channel.send({embeds:[new Discord.MessageEmbed().setTitle("✅플레이리스트의 끝이에요❎").
         setDescription("노래를 종료합니다.")]}).catch(console.error)
         return voice.destroy()
@@ -155,14 +166,11 @@ async function music_play(message, voiceChannel){
     player.on(AudioPlayerStatus.Idle, () => music_play(message,voiceChannel));
     player.on("error", console.error);
     
-    return true
+    
 }
 
 async function search_youtube_music(music_name){
-    console.log(`유튜브 노래 찾기 함수 진입`)
-
     const r =await yts(music_name)
     const videos= r.videos.slice(0,1)
-    console.log(`유튜브 노래 찾기 함수 종료 ----결과 :${videos[0]}`)
     return videos[0]
 }
