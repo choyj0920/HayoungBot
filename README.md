@@ -28,17 +28,17 @@
 - #### Install node libray for control discord bot
 
   - ├── @discordjs/builders@0.7.0
-    ├── @discordjs/opus@0.6.0
-    ├── @discordjs/rest@0.1.0-canary.0
-    ├── @discordjs/voice@0.6.0
-    ├── discord-api-types@0.24.0
-    ├── discord.js@13.2.0
-    ├── events@3.3.0
-    ├── ffmpeg-static@4.4.0
-    ├── ffmpeg@0.0.4
-    ├── libsodium-wrappers@0.7.9
-    ├── yt-search@2.10.2
-    └── ytdl-core@4.9.1
+  - ├── @discordjs/opus@0.6.0
+  - ├── @discordjs/rest@0.1.0-canary.0
+  - ├── @discordjs/voice@0.6.0
+  - ├── discord-api-types@0.24.0
+  - ├── discord.js@13.2.0
+  - ├── events@3.3.0
+  - ├── ffmpeg-static@4.4.0
+  - ├── ffmpeg@0.0.4
+  - ├── libsodium-wrappers@0.7.9
+  - ├── yt-search@2.10.2
+  - └── ytdl-core@4.9.1
 
 - #### Design command 
 
