@@ -109,11 +109,37 @@ module.exports = {
             const connection = getVoiceConnection(voiceChannel.id);
             music_play(message,voiceChannel)
             await message.editReply("노래가 종료 되었습니다.👍")
-
+        }else if(args[0] =="플레이리스트"){
+            if (args[1] == "삭제" || args[1] == "확인" || !args[1]) {
+                switch (args[1]) {
+                    case "삭제":
+                        PlaylistArray = Playlist.get(MGI).get("musicplaylist")
+                        if (!args[2] || isNaN(args[2]) || args[2] > PlaylistArray.length || args[2] < 0) return message.editReply("오류 : 플레이리스트에서 삭제할 노래 번호를 입력해주세요.")
+                        PlaylistArray.splice(--args[2], 1)
+                        Playlist.get(MGI).set("musicplaylist", PlaylistArray)
+                        message.editReply({ embeds : [new Discord.MessageEmbed().setTitle("⛔ 플레이 리스트의 항목을 삭제했어요⛔").setDescription("**/노래 플레이리스트 확인** 명령어로 현재 플레이리스트를 확인 할 수 있어요")]})
+                        break
+                    default:
+                        const Embed = new Discord.MessageEmbed().setTitle("🎶 현재 플레이리스트입니다.🎶").setColor("#009dff")
+                        if (Playlist.get(MGI).get("musicplaylist") == null || Playlist.get(MGI).get("musicplaylist")[0] == null) return message.editReply("표시 할 플레이리스트가 없습니다.")
+                        PlaylistArray = Playlist.get(MGI).get("musicplaylist")
+    
+                        for (var i = 0; i < PlaylistArray.length; i++) {
+                            var number = i
+                            Embed.addField(`${++number}. ${PlaylistArray[i].title}`, `[바로가기](${PlaylistArray[i].url})`)
+                            
+                        }
+                        Embed.addField("LOOP : ",isLoop? "Loop on": "Loop off")
+                        message.editReply({ embeds : [Embed]})
+                        break
+                }
+            }else message.editReply("⛔ 오류 : 올바른 인수를 입력해주세요 (인수 : 삭제 , 확인)")
+        }else if(args[0] == "건너뛰기"){
+            if(!isPlay) return message.editReply("⛔ 오류 : 현재 음악이 재생중이 아닙니다.⛔") 
+            return music_play(message,voiceChannel)
+        }else{
+            return message.editReply("⛔해당 명령어를 찾지 못했습니다⛔")
         }
-        
-
-
     }
 
 
