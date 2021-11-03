@@ -1,5 +1,8 @@
 # 😀HayoungBot
- discord bot for streaming music and other funtion
+####  ***Discord bot for streaming music and other funtion***
+
+
+
 
 
 
@@ -7,7 +10,9 @@
 
 - Node  version 17.0
 - discord.js  v13  ( 😠Requires node 16.6 or higher)
-- 
+- Visual studio code & discord
+
+
 
 ### 다음의 기능을 가지는 디코봇
 
@@ -15,11 +20,46 @@
 
 
 
-## ✅Curriculum
+
+
+##  Contents
+
+- [😀HayoungBot](#hayoungbot)
+      - [***Discord bot for streaming music and other funtion***](#discord-bot-for-streaming-music-and-other-funtion)
+    - [development environment](#development-environment)
+    - [다음의 기능을 가지는 디코봇](#다음의-기능을-가지는-디코봇)
+  - [Contents](#contents)
+- [✅Curriculum](#curriculum)
+    - [21/10/29](#211029)
+    - [21/11/ 1](#2111-1)
+    - [21/11/ 2](#2111-2)
+- [Description](#description)
+  - [Discord /명령어 작동 방식](#discord-명령어-작동-방식)
+  - [deploy-commands.js](#deploy-commandsjs)
+    - [✔ js script to declare commands to the server](#-js-script-to-declare-commands-to-the-server)
+  - [Discord bot init](#discord-bot-init)
+  - [Discord command](#discord-command)
+    - [js file inside "./command"](#js-file-inside-command)
+  - [💬Discord bot  -send message](#discord-bot---send-message)
+  - [🔤Discord bot Embed Message](#discord-bot-embed-message)
+  - [#️⃣ Music command](#️⃣-music-command)
+    - [Library](#library)
+    - [Variable](#variable)
+    - [function](#function)
+      - [Check the voice channel to which the sender belongs](#check-the-voice-channel-to-which-the-sender-belongs)
+      - [➿ music search](#-music-search)
+      - [▶ Play music in Voice Channel](#-play-music-in-voice-channel)
+    - [🔎 Execution according to command](#-execution-according-to-command)
 
 
 
-### 10/29 
+
+
+# ✅Curriculum
+
+
+
+### 21/10/29 
 
 - #### Create discord bot - discord develop portal 
 
@@ -53,7 +93,7 @@
 
 ### 21/11/ 1
 
-- #### ▶/노래 재생 구현
+- #### ▶/노래 재생 구현[code][#-play-music-in-voice-channel]
 
 - #### ⏹/노래 종료
 
@@ -77,7 +117,7 @@
 
 # Description
 
-### Discord 명령어 작동 방식
+## Discord /명령어 작동 방식
 
 - ####  /command 과 같은 슬래시 커맨드를 사용하기 위해 임의의 명령어들을 rest통신으로 서버(길드)에 명령어를 등록해두고  (deploy-commands.js)
 
@@ -85,7 +125,7 @@
 
 - #### Interaction 내부에서 명령어에 따라 바로 대응하거나 command 객체를 찾아 함수 실행
 
-#### 
+
 
 
 
@@ -255,7 +295,7 @@ channel.send({ embeds : [myembed1,myembed2]})
 
 ## #️⃣ Music command
 
-### library 
+### Library 
 
 ```javascript
 // A library that creates stream objects from YouTube URLs.
@@ -312,7 +352,9 @@ module.exports = { // command 정의
 }
 ```
 
-### Check the voice channel to which the sender belongs
+### function
+
+#### Check the voice channel to which the sender belongs
 
 ```javascript
 // 메시지를 보낸 유저가 속해있는 음성채널 가져오기
@@ -323,7 +365,7 @@ if (!voicechannel) return message.editreply("음성채널에 들어가 주세요
 
 ```
 
-### ➿ music search 
+#### ➿ music search 
 
 ```javascript
 const yts = require('yt-search')
@@ -335,7 +377,7 @@ async function search_youtube_music(music_name){
 }
 ```
 
-### ▶ Play music in Voice Channel
+#### ▶ Play music in Voice Channel
 
 ```javascript
 const ytdl = require('ytdl-core')
@@ -363,7 +405,55 @@ async function music_play(message, voiceChannel){
              );
     player.on("error", console.error);
     
-    
 }
+```
+
+
+
+### 🔎 Execution according to command
+
+```javascript
+
+if (args[0]=="재생"){ //Play music command= /노래 재생 title
+    if(!args[1]){ //노래 재생 - 멈췄었던 노래 재생 명령어
+        // error- blank title 
+    }
+    //  music search 
+    const music=await search_youtube_music(musictitle)
+    // push playlist
+    PlaylistArray.push(data)
+    // Synchronize with the playlist to the server 
+    Playlist.get(MGI).set("musicplaylist",PlaylistArray) 
+
+    if (status){// playing
+        //send message and return
+    }else { // is not playing
+        
+        //  Play music in Voice Channel
+    }
+}else if(args[0] =='루프'){ // Set(off) repeat  command = /노래 루프
+    // set the repeat
+}else if(args[0] =='종료'){ // Finish play command = /노래 종료
+    
+    // playlist init & off player
+    
+}else if(args[0] =="플레이리스트"){ 
+    if (args[1] == "삭제" || args[1] == "확인" || !args[1]) {
+        switch (args[1]) {
+            case "삭제":  // Remove songs from playlist commands = /노래 플레이리스트 삭제 n
+                // Remove song from playlist
+                break
+            default: // check the playlist commands =/노래 플레이리스트 (확인)
+                // Write embed message from playlist
+                // send message
+                break
+        }
+    }
+}else if(args[0] == "건너뛰기"){
+    // Play next song  - function(Play music in Voice Channel)  execution
+}else{
+    // can't find command
+}
+
 ```
 

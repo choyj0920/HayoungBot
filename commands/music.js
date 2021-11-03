@@ -51,7 +51,7 @@ module.exports = {
         
         console.log(`MPL(${message.member.guild.name}) : ${Playlist.get(MGI).get("musicplaylist")}`)
         
-        if (args[0]=="재생"){
+        if (args[0]=="재생"){ //노래 재생
             const musictitle="".concat(args.slice(1))
             console.log(`노래 재생 : ${musictitle}`)
             
@@ -59,9 +59,10 @@ module.exports = {
 
             // if(!status && isPlay) return message.editReply("⛔오류 : 노래가 다른 채널에서 재생 중이거나 플레이리스트에 재생 곡이 남아있습니다.⛔")
 
-            if(!args[1]){ //노래 재생 - 멈췄었던 노래 재생 명령어
+            if(!args[1]){ 
                 if(MPL[0] !=null){ //재생될 곡 존재
                     if(!status){ //현재 재생 중 아님
+                        // 나중에 추가할 코드 노래의 재생상태를 일시정지 할 수 있게 되면...
                         return music_play(message,voiceChannel)
                     }else return message.editReply("⛔ 오류 : 노래가 이미 재생되고 있습니다.⛔")
                 }else return message.editReply("⛔ 오류 : 유튜브에서 찾을 노래 제목이나 URL을 입력해주세요⛔")
