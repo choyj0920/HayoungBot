@@ -87,7 +87,7 @@
 
 ### 21/11/ 1
 
-- #### ▶/노래 재생 구현[code][#-play-music-in-voice-channel]
+- #### ▶/노래 재생 구현[code](#-play-music-in-voice-channel)
 
 - #### ⏹/노래 종료
 
