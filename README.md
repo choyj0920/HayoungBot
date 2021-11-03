@@ -16,9 +16,7 @@
 
 ### 다음의 기능을 가지는 디코봇
 
-<img src="README.assets/image-20211102093937334.png" alt="image-20211102093937334" style="zoom:50%;" />
-
-
+<img src="README.assets/image-20211102093937334.png" alt="image-20211102093937334" width="500" />
 
 
 
@@ -293,6 +291,9 @@ channel.send(myembed1) // no longer working
 channel.send({ embeds : [myembed1,myembed2]})
 
 ```
+### result
+
+<img src="README.assets/image-20211102093937334.png" alt="image-20211102093937334" width="500" />
 
 
 
