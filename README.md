@@ -119,11 +119,11 @@
 
 ## Discord /명령어 작동 방식
 
-- ####  /command 과 같은 슬래시 커맨드를 사용하기 위해 임의의 명령어들을 rest통신으로 서버(길드)에 명령어를 등록해두고  (deploy-commands.js)
+- ####  /command 과 같은 슬래시 커맨드를 사용하기 위해 임의의 명령어들을 rest통신으로 서버(길드)에 명령어를 등록해두고  ([deploy-commands.js](#deploy-commandsjs))
 
 - #### Discord 서버에서 그 명령어를 입력 할 시 봇 interaction에 해당 명령어 이름과 함께 메시지가 발신된 채널 ,사용자등에 정보가 수신된다.  
 
-- #### Interaction 내부에서 명령어에 따라 바로 대응하거나 command 객체를 찾아 함수 실행
+- #### Interaction 내부에서 명령어에 따라 바로 대응하거나 command 객체를 찾아 함수 실행 [Define Interaction](define-interaction)
 
 
 
@@ -162,7 +162,7 @@ rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
 
 ## Discord bot init
 
-discord bot 실행시 처음 부분
+### discord bot 실행시 처음 부분
 
 ```javascript
 const { Client, Intents, DiscordAPIError} = require('discord.js');
@@ -189,6 +189,11 @@ for(const file of commandFiles){
 	client.commands.set(command.name,command)
 }
 
+```
+
+### Define Interaction
+
+```javascript
 // bot ready check
 client.once('ready', () => {
 	console.log('Ready!');
@@ -217,8 +222,6 @@ client.on('interactionCreate', async interaction => {
 });
     
 client.login(token); // bot 실행
-
-
 ```
 
 
