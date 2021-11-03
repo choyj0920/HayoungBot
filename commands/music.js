@@ -51,6 +51,8 @@ module.exports = {
         
         console.log(`MPL(${message.member.guild.name}) : ${Playlist.get(MGI).get("musicplaylist")}`)
         
+        
+
         if (args[0]=="재생"){ //노래 재생
             const musictitle="".concat(args.slice(1))
             console.log(`노래 재생 : ${musictitle}`)
@@ -77,7 +79,7 @@ module.exports = {
             // Synchronize with the playlist to the server 
             Playlist.get(MGI).set("musicplaylist",PlaylistArray) 
 
-            if (status){// 현재 재생중이엿으면 
+            if (isPlay){// 현재 재생중이엿으면 
                 message.editReply({embeds : [new Discord.MessageEmbed().setTitle("✅플레이 리스트에 노래를 추가했어요.✅").
                 setDescription("🔘/노래 플레이리스트🔘 명령어로 현재 플레이리스트를 확인 할 수 있습니다.").
                 setColor("#33ff73")]})
@@ -100,6 +102,7 @@ module.exports = {
             setDescription(!isLoop?"➡반복 끌게여 ㅠㅠ ":"🔁반복할게여~").
             setColor("#33ff73")]})
         }else if(args[0] =='종료'){
+            if(!voiceChannel) return message.editReply("⛔오류 : 이명령어를 사용하기 위해서는 음성 채널에 들어가 있으셔야해요⛔")
             if(!isPlay) return message.editReply("⛔오류 : 노래가 종료 되어있습니다.⛔")
             
             PlaylistArray = []
@@ -122,9 +125,10 @@ module.exports = {
                         break
                     default:
                         const Embed = new Discord.MessageEmbed().setTitle("🎶 현재 플레이리스트입니다.🎶").setColor("#009dff")
-                        if (Playlist.get(MGI).get("musicplaylist") == null || Playlist.get(MGI).get("musicplaylist")[0] == null) return message.editReply("표시 할 플레이리스트가 없습니다.")
+                        if (!isPlay && (Playlist.get(MGI).get("musicplaylist") == null || Playlist.get(MGI).get("musicplaylist")[0] == null)) return message.editReply("표시 할 플레이리스트가 없습니다.")
                         PlaylistArray = Playlist.get(MGI).get("musicplaylist")
-    
+                        Embed.addField(`현재 재생곡 : ${curMusic.title}`, `[바로가기](${curMusic.url})\n`)
+                        
                         for (var i = 0; i < PlaylistArray.length; i++) {
                             var number = i
                             Embed.addField(`${++number}. ${PlaylistArray[i].title}`, `[바로가기](${PlaylistArray[i].url})`)
@@ -185,7 +189,7 @@ async function music_play(message, voiceChannel){
     message.channel.send({ embeds: [new Discord.MessageEmbed().setURL(music.url).setTitle("✅ 유튜브에서 노래를 재생했어요 ✅").setDescription(`현재 재생곡 : [${music.title}](${music.url})\n${nexttitle}`).setColor("#33ff7e")]}).catch(console.error)
     const stream= ytdl(music.url,{filter : 'audioonly'})
     const resource = createAudioResource(stream, { inputType :StreamType.Arbitrary});
-    const player=createAudioPlayer()
+    let player=createAudioPlayer()
 
     player.play(resource)
     voice.subscribe(player);

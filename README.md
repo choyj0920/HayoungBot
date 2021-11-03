@@ -428,7 +428,7 @@ if (args[0]=="재생"){ //Play music command= /노래 재생 title
     // Synchronize with the playlist to the server 
     Playlist.get(MGI).set("musicplaylist",PlaylistArray) 
 
-    if (status){// playing
+    if (isPlay){// playing
         //send message and return
     }else { // is not playing
         
