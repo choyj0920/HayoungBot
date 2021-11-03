@@ -16,19 +16,13 @@
 
 ### 다음의 기능을 가지는 디코봇
 
-<img src="README.assets/image-20211102093937334.png" alt="image-20211102093937334" style="zoom:50%;" />
-
-
+<img src="README.assets/image-20211102093937334.png" alt="image-20211102093937334" width="500" />
 
 
 
 ##  Contents
 
-- [😀HayoungBot](#hayoungbot)
-      - [***Discord bot for streaming music and other funtion***](#discord-bot-for-streaming-music-and-other-funtion)
-    - [development environment](#development-environment)
-    - [다음의 기능을 가지는 디코봇](#다음의-기능을-가지는-디코봇)
-  - [Contents](#contents)
+
 - [✅Curriculum](#curriculum)
     - [21/10/29](#211029)
     - [21/11/ 1](#2111-1)
@@ -93,7 +87,7 @@
 
 ### 21/11/ 1
 
-- #### ▶/노래 재생 구현[code][#-play-music-in-voice-channel]
+- #### ▶/노래 재생 구현[code](#-play-music-in-voice-channel)
 
 - #### ⏹/노래 종료
 
@@ -293,6 +287,9 @@ channel.send(myembed1) // no longer working
 channel.send({ embeds : [myembed1,myembed2]})
 
 ```
+### result
+
+<img src="README.assets/image-20211102093937334.png" alt="image-20211102093937334" width="500" />
 
 
 
